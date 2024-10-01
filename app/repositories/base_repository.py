@@ -28,7 +28,8 @@ class BaseRepository(Generic[T]):
         return db_obj
 
     def delete(self, db: Session, id: int):
-        obj = db.query(self.model).get(id)
-        db.delete(obj)
-        db.commit()
+        obj = db.query(self.model).filter(self.model.id == id).first()
+        if obj:
+            db.delete(obj)
+            db.commit()
         return obj

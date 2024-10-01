@@ -36,7 +36,7 @@ def update_breed(
     return breed_service.update(db, breed, breed_data.model_dump())
 
 
-@router.delete("/{breed_id}", response_model=BreedSchema)
+@router.delete("/{breed_id}", response_model=dict)
 def delete_breed(breed_id: int, db: Session = Depends(get_db)):
     breed = breed_service.delete(db, breed_id)
     if breed is None:

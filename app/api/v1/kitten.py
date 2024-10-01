@@ -39,7 +39,7 @@ def update_kitten(
     return kitten_service.update(db, kitten, kitten_data.model_dump())
 
 
-@router.delete("/{kitten_id}", response_model=KittenSchema)
+@router.delete("/{kitten_id}", response_model=dict)
 def delete_kitten(kitten_id: int, db: Session = Depends(get_db)):
     kitten = kitten_service.delete(db, kitten_id)
     if kitten is None:
