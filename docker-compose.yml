@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15.0
+    container_name: cat_exhibition_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - exhibition-network
+
+  app:
+    build: .
+    container_name: cat_exhibition_api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - exhibition-network
+
+  test_db:
+    image: postgres:15.0
+    container_name: cat_exhibition_test_db
+    restart: always
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: testdatabase
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - exhibition-network
+
+volumes:
+  db-data:
+  test-db-data:
+
+networks:
+  exhibition-network:
+    driver: bridge
